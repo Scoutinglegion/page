@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Highcharts Example</title>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+
+  <script type="text/javascript">
+  var data={{data}};
+  //创建图表
+  var chart;
+  $(document).ready(function() {
+   Highcharts.setOptions({
+    global:{
+        useUTC:false
+    }
+   })
+   chart = new Highcharts.StockChart( {
+    chart : {
+     renderTo : 'container',
+     events : {
+      load : st// 定时器
+     }
+    },
+    rangeSelector: {
+      inputEnabled: $('#container').width() > 480,
+        selected: 1
+    },
+    exporting:{
+     enabled:true
+    },
+    title : {
+     text : '内存使用情况'
+    },
+    series : [ {
+     name: '内存使用情况',
+     data : data,
+     type: 'spline',
+     }]
+   });
+  });
+
+  //2秒钟刷新一次数据
+  function st() {
+   setInterval("getData()", 1000);
+	}
+  //动态更新图表数据
+  function getData() {
+   $.ajax({
+      type: "get",
+      url: "/new",
+      dataType: "json",
+      success : function(data){
+      chart.series[0].addPoint(data,true,true);
+      }
+    });
+  }
+  </script>
+<script>
+function myFunction()
+{
+    alert("This is my first warning！");
+}
+</script>
+
+ </head>
+ <body>
+<div id="container" ></div>
+
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+<li><a href="#">CMDB</a><span class="divider"></span></li>
+<li class="active">管理</li>
+{% endblock %}
+
+{% block body %}
+<div class="widget-box">
+   <div class="widget-title">
+      <h5 dist="float:left;"><i class="fa fa-table fa-fw"></i>管理</h5>
+      <button dist="float:right;" class="btn btn-primary btn-sm" id="addBtn">添加记录</button>
+   </div> <!--widget-title end-->
+
+<!--添加用户模态窗-->
+<div id="addModal" class="modal fade">
+ <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加记录</h4>
+          </div><!--modal-header end-->
+
+    <div class="modal-body">
+    <form class="form-horizontal" id="addForm" accept-charset="UTF-8">
+
+
+    <div class="control-group">
+        <label class="control-label col-sm-3">数量:</label>
+        <div class="col-sm-9">
+            <input  type="text" name="device" id="updevice"  class="form-control" datatype="*" />
+        </div>
+    </div><!--记录型号-->
+
+
+    <div class="form-group">
+         <div class="modal-footer">
+                <button class="btn btn-primary" id="submitbtn" >确认添加</button>
+                <button class="btn btn-warning" data-dismiss="modal">退出</button>
+        </div>
+    </div>
+    </form>
+
+      </div><!-- /.modal-body-->
+   </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--更新用户模态窗-->
+<div id="updateModal" class="modal fade">
+
+ <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">更新记录</h4>
+          </div><!--modal-header end-->
+
+    <div class="modal-body">
+    <p hidden id="uperrorMsg" class="text-danger" dist="color:red"></p> <!-- foe error msg-->
+    <form class="form-horizontal" id="updateForm" accept-charset="UTF-8">
+
+    <input type="hidden" id='upid' name="id">  <!--update need id-->
+
+    <div class="control-group">
+        <label class="control-label col-sm-3">数量：</label>
+        <div class="col-sm-9">
+            <input  type="text" name="device" id="updevice"  class="form-control" datatype="*" errormsg="必须是2-20个字符" />
+        </div>
+    </div><!--记录型号-->
+    <div class="form-group">
+         <div class="modal-footer">
+                <button class="btn btn-primary" id="submitbtn" >确认添加</button>
+                                <button class="btn btn-warning" data-dismiss="modal">退出</button>
+        </div>
+    </div>
+    </form>
+     </div><!-- /.modal-body-->
+   </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--修改用户密码模态窗-->
+<div id="ChangePasswdModal" class="modal fade">
+ <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">更改用户密码</h4>
+          </div><!--modal-header end-->
+      <div class="modal-body">
+      <p hidden id="errorMsg" class="text-danger" dist="color:red">更改用户密码</p> <!-- foe error msg-->
+        <form class="form-horizontal" id="ChangePasswdForm">
+        <input id="passwdid" type="hidden"  name="passwdid">  <!--update need id-->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">新密码</label>
+
+                 <div class="col-sm-10">
+                        <input class="form-control" type="password"  name="changepasswd" />
+                </div>
+        </div>
+
+        <div class="form-group">
+                <div class="modal-footer">
+                                <button class="btn btn-primary" >更新</button>
+                                <button class="btn btn-warning" data-dismiss="modal">退出</button>
+                </div>
+        </div><!--button end-->
+     </form>
+   </div><!-- /.modal-body-->
+   </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+    <div class="widget-content">
+    <!--用户列表-->
+                <table id ="datatable"  class="table table-bordered table-striped table-hover">
+                <thead>
+                        <tr>
+
+                                <th>数量</th>
+                                <th>操作</th>
+                        </tr>
+                </thead>
+                <tbody>
+                </tbody>
+           </table>
+        </div><!--widget-content end-->
+
+</div><!--widget-box end-->
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+
+
+
+ </body>
+</html>
+

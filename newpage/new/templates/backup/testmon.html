@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Highcharts Example</title>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+
+  <script type="text/javascript">
+
+  var data={{data}};
+    
+  //创建图表
+  var chart;
+  $(document).ready(function() {
+   Highcharts.setOptions({
+    global:{
+        useUTC:false
+    }
+   })
+
+   chart = new Highcharts.StockChart( {
+    chart : {
+     renderTo : 'container',
+     events : {
+      load : st// 定时器
+     }
+    },
+    rangeSelector: {
+      inputEnabled: $('#container').width() > 480,
+        selected: 1
+    },
+    exporting:{
+     enabled:true
+    },
+    title : {
+     text : '内存使用情况'
+    },
+    series : [ {
+     name: '内存使用情况',
+     data : data,
+     type: 'spline',
+     }]
+   });
+  });
+
+  //2秒钟刷新一次数据
+  function st() {
+   setInterval("getData()", 1000);
+	}
+  //动态更新图表数据
+  function getData() {
+   $.ajax({
+      type: "get",
+      url: "/new",
+      dataType: "json",
+      success : function(data){
+      chart.series[0].addPoint(data,true,true);
+      }
+    });
+  }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+function myFunction()
+{
+    alert("This is my first warning！");
+}
+</script>
+<h1>#This is my code</h1>
+<style type="text/css">
+.link { stroke: green; stroke-linejoin:bevel;}
+
+.link_error{
+    stroke:red;
+    stroke-linejoin:bevel;
+}
+.nodetext {
+    font: 12px sans-serif;
+    -webkit-user-select:none;
+    -moze-user-select:none;
+    stroke-linejoin:bevel;
+}
+
+#container{
+    width:920px;
+    height:1200px;
+    border:1px solid gray;
+    border-radius:5px;
+    position:relative;
+    margin:20px;
+}
+</style>
+
+<script language=javascript>
+function hero()
+{
+var herowidth=400;//改为你要的网页宽度
+var heroheight=300;//改为你要的网页高度
+window.resizeTo(herowidth,heroheight);
+}
+hero();
+</script>
+
+
+ </head>
+ <body>
+<div id="container" ></div>
+
+
+
+
+
+
+
+
+
+
+ <input type="button" onclick="myFunction()" value="显示警告框">
+<script type="text/javascript">
+
+
+<form name="myForm" action="demo_form.php" onsubmit="return validateForm()" method="post">
+名字: <input type="text" name="fname">
+<input type="submit" value="提交">
+</form>
+
+
+function Topology(ele){
+    typeof(ele)=='string' && (ele=document.getElementById(ele));
+    var w=ele.clientWidth,
+        h=ele.clientHeight,
+        self=this;
+    this.force = d3.layout.force().gravity(.05).distance(200).charge(-800).size([w, h]);
+    this.nodes=this.force.nodes();
+    this.links=this.force.links();
+    this.clickFn=function(){};
+    this.vis = d3.select(ele).append("svg:svg")
+                 .attr("width", w).attr("height", h).attr("pointer-events", "all");
+
+    this.force.on("tick", function(x) {
+      self.vis.selectAll("g.node")
+          .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+      self.vis.selectAll("line.link")
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+    });
+}
+Topology.prototype.doZoom=function(){
+    d3.select(this).select('g').attr("transform","translate(" + d3.event.translate + ")"+ " scale(" + d3.event.scale + ")");
+
+}
+//增加节点
+
+
+Topology.prototype.addNode=function(node){
+    this.nodes.push(node);
+}
+Topology.prototype.addNodes=function(nodes){
+    if (Object.prototype.toString.call(nodes)=='[object Array]' ){
+        var self=this;
+        nodes.forEach(function(node){
+            self.addNode(node);
+        });
+    }
+}
+//增加连线
+Topology.prototype.addLink=function(source,target){
+    this.links.push({source:this.findNode(source),target:this.findNode(target)});
+}
+//增加多个连线
+Topology.prototype.addLinks=function(links){
+    if (Object.prototype.toString.call(links)=='[object Array]' ){
+        var self=this;
+        links.forEach(function(link){
+            self.addLink(link['source'],link['target']);
+        });
+    }
+}
+//删除节点
+Topology.prototype.removeNode=function(id){
+    var i=0,
+        n=this.findNode(id),
+        links=this.links;
+    while ( i < links.length){
+        links[i]['source']==n || links[i]['target'] ==n ? links.splice(i,1) : ++i;
+    }
+    this.nodes.splice(this.findNodeIndex(id),1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </body>
+</html>

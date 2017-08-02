@@ -1,0 +1,58 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <!--<!DOCTYPE HTML> var data={{data}};  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script>
+function myinfo(data){
+	console.log('data', data);
+$.ajax({ 
+        type: "post", 
+        url:"/url", 
+        data:data,
+        dataType: "json", 
+        success: function(data) {
+        }, 
+});
+}
+</script>
+<script type="text/javascript">
+function getdata() {
+   $.ajax({
+      type: "get",
+      url: "/new",
+      dataType: "json",
+      success : function(data){
+
+	  var arr=JSON.parse(JSON.stringify(data));
+        var num=arr.length
+        for(var i=0;i<num;i++)
+        {
+
+		var btn=document.createElement("BUTTON");
+        var t=document.createTextNode(arr[i]);
+        btn.appendChild(t);
+        document.body.appendChild(btn);
+		btn.setAttribute("name","button");
+		btn.setAttribute("type","radio");
+		var mynew=JSON.stringify(arr[i]);
+		console.log('init data', arr[i]);
+		btn.onclick = myinfo.bind(null,arr[i]);
+		btn.setAttribute("value",arr[i]);
+
+		}
+      }
+    });
+}
+</script>
+</head>
+<body onload=getdata()> 
+<div id="container" ></div>
+
+ </body>
+</html>
+
+
+

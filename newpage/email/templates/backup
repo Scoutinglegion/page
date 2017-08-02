@@ -1,0 +1,71 @@
+
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Highcharts Example</title>
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/funnel.js"></script>-->
+  <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script>
+var mynum=0;
+function myinfo(data){
+//alert('This is a test')
+//   alert(document.getElementsByTagName('button')[1].value) 
+//	var regtype = $("button:radio[name='button']:checked").val(); //regtype为表单名称
+
+	console.log('data', data);
+	//var sel = $("button[type='button'][name='button']:checked");
+	//alert(sel);
+//   var a=button.name.value;  
+$.ajax({ 
+        type: "post", 
+        url:"/url", 
+        data:data,
+        dataType: "json", 
+        success: function(data) {
+        }, 
+//	error: function(xh, type) { return 'error'  } 
+});
+}
+</script>
+<script type="text/javascript">
+var data={{data}};
+function getdata() {
+   $.ajax({
+      type: "get",
+      url: "/new",
+      dataType: "json",
+      success : function(data){
+	var arr=JSON.parse(JSON.stringify(data));
+//	alert(arr.length); //显示数组长度8
+        var num=arr.length
+        for(var i=0;i<num;i++)
+        {
+        var btn=document.createElement("BUTTON");
+        var t=document.createTextNode(arr[i]);
+        btn.appendChild(t);
+        document.body.appendChild(btn);
+	btn.setAttribute("name","button");
+	btn.setAttribute("type","radio");
+//	btn.setAttribute("onclick", "javascript:alert('This is a test!');");         
+	var mynew=JSON.stringify(arr[i]);
+	console.log('init data', arr[i]);
+	btn.onclick = myinfo.bind(null,arr[i]);
+	//btn.setAttribute("onclick","javascript:myinfo()");         
+	btn.setAttribute("value",arr[i]);
+        }
+      }
+    });
+}
+</script>
+</head>
+<body onload="getdata()"> 
+<div id="container" ></div>
+
+ </body>
+</html>
+
+
+

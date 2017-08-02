@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+#coding:utf-8
+__author__ = 'pushiqiang'
+from flask import Flask, request
+#from . import app
+
+import json,time,traceback,hashlib
+import MySQLdb as mysql
+import json
+from flask import Flask,request,render_template
+from flask import Flask, request, url_for, redirect
+import requests
+from flask import send_file
+
+app = Flask(__name__)
+@app.route('/',methods=['GET','POST'])
+def hello():
+	if request.method == 'POST':
+		data = request.json
+		print "This is my message"
+		print data
+		return redirect(url_for('/send'))
+#	return render_template('login.html',data=json.dumps(ones))
+	return render_template('disk.html')
+
+@app.route('/send')
+def send():
+     return send_file("/var/www/html/newpage/pic.html",None,None,None)
+
+@app.route('/new',methods=['GET'])
+def getnew():
+    top=[122,43,'21.2.2.2']
+    print top
+#        [1500398347000, 992]
+    return json.dumps(top)
+
+@app.route('/url',methods=['GET','POST'])
+def myhello():
+    if request.method == 'POST':
+        newdata = request.json 
+        print newdata
+	mydata = request.get_data()
+	print mydata
+	print str(mydata)
+        return 'OK'
+
+@app.route('/mylogin', methods=['GET', 'POST'])
+def login():
+	error = None
+	if request.method == 'POST':
+		print "message"	
+#		if request.form['username'] != app.config['USERNAME']:
+#			error = 'Invalid username'
+#			session['logged_in'] = True
+#			flash('You were logged in')
+		return redirect(url_for('newsend'))
+	return render_template('login.html', error=error)
+#	return json.dumps({'code': 0, 'errmsg': "登录失败"})
+
+@app.route('/login', methods=['GET', 'POST'])
+def newlogin():
+	if request.method == 'POST':
+ 		data = request.json
+  		print "This is my message"
+   		print data
+		mydata = request.get_data()
+		print mydata
+		print str(mydata)
+#		session['username'] = request.form['username']
+		return redirect(url_for('send'))
+	return render_template('login.html')
+#	return 		'''
+#					<form method="post">
+#		               <p><input type=text name=username>
+#		               <p><input type=submit value=Login>
+#		           	</form>
+#		       '''
+
+app.run(host='0.0.0.0',port=8890,debug=True)
+
+
